@@ -8,8 +8,7 @@ func main.foo(x: int, y: int) -> int
     return x + y && true
 end
 
-foo_ref = *foo
-foo = 133.7
+foo = 133.7 + \"I'm a string \"
 ";
     let mut lexer = Lexer::new(input);
 

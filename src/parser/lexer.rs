@@ -48,6 +48,46 @@ impl<'a> Lexer<'a> {
         number
     }
 
+    pub fn read_string(&mut self, enclosure: char) -> String {
+        let mut result  = Vec::new();
+        let mut escaped = false;
+
+        while let Some(n) = self.input.next() {
+            match n {
+                '\\' if escaped => {
+                    result.push('\\');
+                    escaped = !escaped;
+                }
+
+                't' if escaped => {
+                    result.push('\t');
+                    escaped = false;
+                }
+
+                'n' if escaped => {
+                    result.push('\n');
+                    escaped = false;
+                }
+
+                x if enclosure == x => {
+                    if escaped {
+                        result.push(x)
+                    } else {
+                        break
+                    }
+                }
+
+                _ => {
+                    escaped = false;
+                    result.push(n);
+                }
+            }
+        }
+
+        let out: String = result.iter().cloned().collect();
+        
+        out
+    }
 
     fn get_precedence(token: &Token) -> i32 {
         match *token {
@@ -138,6 +178,10 @@ impl<'a> Lexer<'a> {
                 '{' => Some(Token::LBrace),
                 '}' => Some(Token::RBrace),
 
+                '"' | '\'' => {
+                    Some(Token::Text(self.read_string('"')))
+                }
+
                 _   => {
                     if Self::is_letter_related(c) {
                         Some(Self::string_to_keyword(self.read_identifier(c)))
@@ -219,6 +263,7 @@ pub enum Token {
     Identifier(String),
     Integer(i64),
     Float(f64),
+    Text(String),
 
     Assign,
     Denial,
