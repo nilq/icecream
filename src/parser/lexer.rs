@@ -48,44 +48,88 @@ impl<'a> Lexer<'a> {
         number
     }
 
+
+    fn get_precedence(token: &Token) -> i32 {
+        match *token {
+            Token::Assign      => 10,
+            Token::And         => 12,
+            Token::LessThan    => 15,
+            Token::GreaterThan => 15,
+            Token::EqualTo     => 15,
+            Token::NotEqualTo  => 15,
+            Token::Plus        => 20,
+            Token::Minus       => 20,
+            Token::Slash       => 40,
+            Token::Asterix     => 40,
+            Token::Period      => 100,
+            _ => -1,
+        }
+    }
+
     pub fn next_token(&mut self) -> Option<Token> {
         self.skip_whitespace();
 
         if let Some(c) = self.read_char() {
             match c {
                 '=' => {
-                    if let Some(&'=') = self.peek_char() {
-                        let _ = self.read_char();
-                        Some(Token::Eq)
-                    } else {
-                        Some(Token::Assign)
+                    match self.peek_char() {
+                        Some(&'=') => {
+                            self.read_char();
+                            Some(Token::EqualTo)
+                        }
+                        
+                        _ => {
+                            Some(Token::Assign)
+                        }
                     }
                 }
 
                 '+' => Some(Token::Plus),
                 '-' => {
-                    if let Some(&'>') = self.peek_char() {
-                        let _ = self.read_char();
-                        Some(Token::Arrow)
-                    } else {
-                        Some(Token::Minus)
+                    match self.peek_char() {
+                        Some(&'>') => {
+                            self.read_char();
+                            Some(Token::Arrow)
+                        }
+                        
+                        _ => {
+                            Some(Token::Minus)
+                        }
                     }
                 },
 
                 '~' => {
-                    if let Some(&'=') = self.peek_char() {
-                        let _ = self.read_char();
-                        Some(Token::NotEq)
-                    } else {
-                        Some(Token::Denial)
+                    match self.peek_char() {
+                        Some(&'=') => {
+                            self.read_char();
+                            Some(Token::NotEqualTo)
+                        }
+                        
+                        _ => {
+                            Some(Token::Denial)
+                        }
+                    }
+                }
+
+                '&' => {
+                    match self.peek_char() {
+                        Some(&'&') => {
+                            self.read_char();
+                            Some(Token::And)
+                        }
+                        
+                        _ => {
+                            Some(Token::BinaryAnd)
+                        }
                     }
                 }
 
                 '*' => Some(Token::Asterix),
                 '/' => Some(Token::Slash),
-                '<' => Some(Token::Lt),
-                '>' => Some(Token::Gt),
+                '<' => Some(Token::LessThan),
+                '>' => Some(Token::GreaterThan),
                 ',' => Some(Token::Comma),
+                '.' => Some(Token::Period),
 
                 ':' => Some(Token::Colon),
 
@@ -128,6 +172,8 @@ impl<'a> Lexer<'a> {
             "else"   => Token::Else,
             "return" => Token::Return,
             "end"    => Token::End,
+            "true"   => Token::True,
+            "false"  => Token::False,
             _        => Token::Identifier(id),
         }
     }
@@ -169,10 +215,10 @@ pub enum Token {
     Plus,
     Slash,
 
-    Gt,
-    Lt,
-    Eq,
-    NotEq,
+    GreaterThan,
+    LessThan,
+    EqualTo,
+    NotEqualTo,
 
     Comma,
     Colon,
@@ -183,6 +229,8 @@ pub enum Token {
     LParen,
     RParen,
 
+    Period,
+
     Function,
     Lambda,
     If,
@@ -190,4 +238,10 @@ pub enum Token {
     Else,
     Return,
     End,
+
+    And,
+    BinaryAnd,
+
+    True,
+    False,
 }
