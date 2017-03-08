@@ -1,3 +1,6 @@
+use parser::lexer::{Token, Lexer};
+use parser::error::ParserError;
+
 #[derive(Debug, Clone)]
 pub enum Statement {
     If(Box<Expr>, Box<Statement>),
@@ -11,7 +14,9 @@ pub enum Statement {
 
 #[derive(Debug, Clone)]
 pub enum Expr {
-    IntConst(i64),
+    Integer(i64),
+    Float(f64),
+    Text(String),
     Identifier(String),
     FnCall(String, Box<Vec<Expr>>),
     Dot(Box<Expr>, Box<Expr>),
@@ -19,4 +24,13 @@ pub enum Expr {
     Assignment(Box<Expr>, Box<Expr>),
     True,
     False,
+}
+
+fn parse_main<'a>(input: &mut Lexer<'a>) {
+    if let Some(token) = input.next_token() {
+        match token {
+            Token::Integer(ref a)    => Ok(Expr::Integer(a.clone())),
+            Token::Text(ref a)       => Ok(Expr::Text(a.clone())),
+        }
+    }
 }
