@@ -9,7 +9,7 @@ func main.foo(x: int, y: int) -> int
 end
 
 foo_ref = *foo
-foo = 133.3
+foo = 133.7
 ";
     let mut lexer = Lexer::new(input);
 

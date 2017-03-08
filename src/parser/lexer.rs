@@ -142,7 +142,18 @@ impl<'a> Lexer<'a> {
                     if Self::is_letter_related(c) {
                         Some(Self::string_to_keyword(self.read_identifier(c)))
                     } else if c.is_digit(10) {
-                        Some(Token::Integer(self.read_number(c)))
+                        let number: String = self.read_number(c);
+
+                        match number.parse::<i64>() {
+                            Ok(int) => Some(Token::Integer(int)),
+                            _       => {
+                                match number.parse::<f64>() {
+                                    Ok(float) => Some(Token::Float(float)),
+                                    _         => panic!("Invalid number!")
+                                }
+                            }
+                        }
+
                     } else {
                         Some(Token::Fucked(c))
                     }
@@ -206,7 +217,8 @@ pub enum Token {
     Fucked(char),
 
     Identifier(String),
-    Integer(String),
+    Integer(i64),
+    Float(f64),
 
     Assign,
     Denial,
