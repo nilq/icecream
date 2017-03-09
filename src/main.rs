@@ -1,4 +1,5 @@
 mod parser;
+mod vm;
 
 use parser::lexer::Lexer;
 
