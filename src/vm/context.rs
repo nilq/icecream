@@ -1,13 +1,13 @@
-use vm::llvm;
+use vm;
 
 use super::LLVMRef;
 
-use self::llvm::core::{
+use super::llvm::core::{
     LLVMContextCreate,
     LLVMContextDispose
 };
 
-use self::llvm::prelude::LLVMContextRef;
+use super::llvm::prelude::LLVMContextRef;
 
 #[derive(Debug)]
 pub struct Context {
