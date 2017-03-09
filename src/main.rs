@@ -8,11 +8,11 @@ use vm::context::Context;
 
 fn lexer_debug() {
     let input = "
-func main.foo(x: int, y: int) -> int
+func foo(x: int, y: int) -> int
     return x + y && true
 end
 
-foo = 133.7 + \"I'm a string \"
+foo = 133.7 + \"I'm a string, hello\"
 ";
 
     println!("{}", input);
@@ -28,9 +28,10 @@ foo = 133.7 + \"I'm a string \"
 
 fn ir_debug() {
     let context = Context::new();
-    let module  = Module::new("chocolate", &context);
+    let module  = Module::new("strawberry", &context);
 
     println!("{}", module);
+
 }
 
 fn main() {
