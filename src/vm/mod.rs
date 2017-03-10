@@ -5,7 +5,8 @@ pub mod context;
 pub mod module;
 pub mod value;
 pub mod llvm_type;
-pub mod llvm_builder;
+pub mod builder;
+pub mod function;
 
 pub trait LLVMRef<R> {
     fn to_ref(&self) -> R;
