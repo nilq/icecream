@@ -2,8 +2,8 @@ use vm::LLVMRef;
 use vm::context::Context;
 use vm::value::Value;
 
-use libc::c_char;
-use llvm::core::{
+use vm::libc::c_char;
+use vm::llvm::core::{
     LLVMBuildAdd,
     LLVMBuildRet,
     LLVMBuildRetVoid,
@@ -12,7 +12,7 @@ use llvm::core::{
     LLVMPositionBuilderAtEnd,
 };
 
-use llvm::prelude::{
+use vm::llvm::prelude::{
     LLVMBasicBlockRef,
     LLVMBuilderRef,
 };
