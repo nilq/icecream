@@ -82,6 +82,7 @@ impl LLVMRef<LLVMBuilderRef> for Builder {
     }
 }
 
+#[derive(Debug)]
 pub struct BasicBlock {
     block: LLVMBasicBlockRef,
 }
